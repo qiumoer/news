@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html ng-app="directive">
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<script type="text/javascript" src="../angular.js" ></script>
+	<body>
+		<div expend="123" date-type = "456" expend-data = "nihao"></div>
+		<div expend="123"></div>
+		<div expend="123"></div>
+		<p id="text">12345678</p>
+		<expend ></expend>
+	<div ng-controller="directiveCtrl">
+			<div class="title" ng-click="toggle()">{{title}}</div>
+			<div class="body" ng-show="showMe">这是内容</div>
+			<div id="text1">123</div>
+	</div> 
+	</body>
+	<script>
+		var app = angular.module('directive',[]);//'directive'是定义控制区域，==》操作dom节点就用direvctive
+		app.directive('expend',[function(){//创建一个组件，'expend"组件名
+			return {
+				restrict: 'EA',//标签和属性的写法激活此组件
+				replace: true,
+				transclude: true,
+				scope:{//
+					text:'=expendData',//angular固定写法expendDate是元素的属性名 
+					text1:'=expend',//属性的值只能是数字类型
+				},
+				template:'<div><div class="title" ng-click="toggle()">{{title}}</div><div class="body" ng-show="showMe">这是内容</div></div>',
+//				'<div>' +
+//					'<div class="title" ng-click="toggle()">{{title}}</div>' +
+//					'<div class="body" ng-show="showMe" ng-transclude></div>' +
+//					'</div>'
+				link: function(scope, element, attrs){//scope 与控制的区别：没有$符号 link相当于一个域==>新建组件的控制器,组件可以引用jquery的方法 controller也可以引用jquery的方法但是不推荐，因为controller单纯的是个控制器
+					console.log(scope)
+					var b = angular.element(document.querySelector('#text')).html();
+					console.log(b)
+					scope.title = "我们的第一个组件";
+					scope.showMe = true;
+					scope.toggle = function() {
+						scope.showMe = !scope.showMe;
+					}
+				}
+			}
+		}])
+		app.controller('directiveCtrl',['$scope',function($scope){
+			angular.element(document.querySelector('#text1')).css('background','red');
+			$scope.title = "我们的第一个组件";
+			$scope.showMe = true;
+			$scope.toggle = function() {
+				$scope.showMe = !$scope.showMe;
+			}
+		}])
+	</script>
+</html>
